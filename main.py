@@ -11,7 +11,6 @@ from tqdm import tqdm
 import re
 import natsort
 
-# === CLI ARGUMENTS ===
 parser = argparse.ArgumentParser(description="Generate a technical book from a Python repo using a local LLM.")
 parser.add_argument("--repo", help="GitHub repo in the form 'owner/repo' or full URL (if using GitHub)")
 parser.add_argument("--path", help="Local path to a Python project (if using local files)")
@@ -24,7 +23,6 @@ EXPLAINED_DIR = "book/explained"
 OLLAMA_MODEL = "mistral"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
-# === SETUP ===
 load_dotenv()
 Path(BOOK_DIR).mkdir(exist_ok=True)
 Path(EXPLAINED_DIR).mkdir(exist_ok=True)
@@ -54,7 +52,6 @@ else:
 if not SOURCE_SUBPATH:
     SOURCE_SUBPATH = "python" if repo else LOCAL_PATH
 
-# === FUNCTIONS ===
 def slugify(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
@@ -147,7 +144,6 @@ for i, file in enumerate(tqdm(python_files, desc="Generating Book")):
     chapter_path.write_text(chapter_content)
     all_chapters.append(chapter_content)
 
-# Write combined book
 book_combined = "\n\n".join(all_chapters)
 Path(f"{BOOK_DIR}/book.md").write_text(book_combined)
 
@@ -159,10 +155,8 @@ for line in book_combined.splitlines():
         anchor = slugify(title)
         toc_entries.append(f"- [{title}](#{anchor})")
 
-# Write table of contents
 Path(f"{BOOK_DIR}/TOC.md").write_text("# Table of Contents\n\n" + "\n".join(toc_entries))
 
-# Cleanup intermediate files if requested
 if args.clean:
     for f in Path(BOOK_DIR).glob("chapter_*.md"):
         f.unlink()
