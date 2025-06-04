@@ -15,7 +15,7 @@ import natsort
 parser = argparse.ArgumentParser(description="Generate a technical book from a Python repo using a local LLM.")
 parser.add_argument("--repo", help="GitHub repo in the form 'owner/repo' or full URL (if using GitHub)")
 parser.add_argument("--path", help="Local path to a Python project (if using local files)")
-parser.add_argument("--source", help="Path to the Python source directory in the repo or local project")
+parser.add_argument("--source", help="Path within the repo or local directory to start parsing from")
 parser.add_argument("--clean", action="store_true", help="Remove intermediate chapter files after generating the book or clean without processing if used alone")
 args = parser.parse_args()
 
@@ -35,12 +35,12 @@ if args.clean and not (args.repo or args.path or args.source):
         f.unlink()
     for f in Path(EXPLAINED_DIR).glob("*.md"):
         f.unlink()
-    print(" Cleaned intermediate chapter files.")
+    print("🧹 Cleaned intermediate chapter files.")
     exit(0)
 
 REPO_NAME = args.repo
 LOCAL_PATH = args.path
-TARGET_DIR = args.source
+SOURCE_SUBPATH = args.source
 
 if REPO_NAME:
     if REPO_NAME.startswith("https://github.com"):
@@ -51,8 +51,8 @@ if REPO_NAME:
 else:
     repo = None
 
-if not TARGET_DIR:
-    TARGET_DIR = "python" if repo else LOCAL_PATH
+if not SOURCE_SUBPATH:
+    SOURCE_SUBPATH = "python" if repo else LOCAL_PATH
 
 # === FUNCTIONS ===
 def slugify(text):
@@ -130,7 +130,7 @@ def get_python_files(path):
     return natsort.natsorted(files)
 
 # === PROCESS FILES ===
-python_files = get_python_files(TARGET_DIR)
+python_files = get_python_files(SOURCE_SUBPATH)
 all_chapters = []
 
 # Add high-level project overview as Chapter 0
@@ -169,4 +169,4 @@ if args.clean:
     for f in Path(EXPLAINED_DIR).glob("*.md"):
         f.unlink()
 
-print("####### All chapters, explanations, and visuals generated. Combined book and TOC ready. ########")
+print("✅ All chapters, explanations, and visuals generated. Combined book and TOC ready.")

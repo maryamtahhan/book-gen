@@ -1,16 +1,18 @@
-# Technical Book Generator
+# Technical Book Generator (Python Projects)
 
-This project automatically generates a technical book-style explanation of
-a GitHub codebase using a local LLM (Mistral via Ollama) on macOS.
+This tool automatically generates a technical book-style explanation of a
+**Python-based GitHub codebase** using a local LLM (Mistral via Ollama)
+on macOS.
 
 ---
 
 ## Features
 
-- Downloads and parses files from the a GitHub repo
-- Converts each file into a Markdown code chapter
-- Uses a local AI model (Mistral) via Ollama to generate natural-language explanations
-- Saves AI-written chapters in `book/explained/`
+- Clones or reads from any Python-based GitHub repo or local path
+- Converts each `.py` file into a Markdown chapter
+- Uses a local AI model (Mistral) via Ollama to generate human-readable explanations
+- Adds Mermaid diagrams and project overviews
+- Outputs a clean, combined `book.md` and TOC
 
 ---
 
